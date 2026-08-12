@@ -5,8 +5,8 @@ export const options = {
     scenarios: {
         processo_pje: {
             executor: 'constant-vus',
-            vus: 100,
-            duration: '30s',
+            vus: 500,
+            duration: '40s',
         },
     },
 
@@ -172,6 +172,32 @@ export default function () {
 
     console.log(`Abrir Processo: ${abrirProcesso.status}`);
 
-    sleep(2);
+    //=====================================================
+// 6 - DOWNLOAD DO DOCUMENTO
+//=====================================================
+
+const inicioDownload = Date.now();
+
+const download = http.get(
+    `${BASE_URL}/d01-1g/seam/resource/rest/pje-legacy/documento/download/244263016`
+   // `${BASE_URL}/2026081209s/0000123-18.2026.8.17.2530-1786537134199-20395-peticao%20inicial%20%28outras%29.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=docs1g296adec7%2F20260812%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260812T121854Z&X-Amz-Expires=120&X-Amz-SignedHeaders=host&X-Amz-Signature=0bde7fcb4ab2de6a3b4c283fe93704192d3dd21ffd83e0db3d1098d391f54f63`
+);
+
+const tempoDownload = Date.now() - inicioDownload;
+
+check(download, {
+    'Download aberto': (r) => r.status === 200,
+
+});
+
+console.log(`Abrir Download: ${download.status}`);
+
+
+sleep(2);
+
+
+
+
+
 
 }
