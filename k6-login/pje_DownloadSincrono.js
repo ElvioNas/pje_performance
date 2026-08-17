@@ -5,8 +5,8 @@ export const options = {
     scenarios: {
         processo_pje: {
             executor: 'constant-vus',
-            vus: 1,
-            duration: '5s',
+            vus: 5,
+            duration: '20s',
         },
     },
 
@@ -16,15 +16,13 @@ export const options = {
     },
 };
 
-const BASE_URL =
-    'https://desenvolvimento-pje.app.tjpe.jus.br';
+const BASE_URL = 'https://desenvolvimento-pje.app.tjpe.jus.br';
 
 const headersForm = {
     headers: {
-        'Content-Type':
-            'application/x-www-form-urlencoded; charset=UTF-8',
-        'X-Requested-With': 'XMLHttpRequest',
-    },
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'X-Requested-With': 'XMLHttpRequest'
+    }
 };
 
 export default function () {
@@ -41,12 +39,10 @@ export default function () {
         'Tela Login': (r) => r.status === 200,
     });
 
-    console.log(`Tela Login: ${paginaLogin.status}`);
-
     const payloadLogin = {
         username: '03108751450',
         password: '123',
-        btnEntrar: 'Entrar',
+        btnEntrar: 'Entrar'
     };
 
     const login = http.post(
@@ -56,14 +52,12 @@ export default function () {
     );
 
     check(login, {
-        'Login realizado': (r) =>
-            r.status === 200 || r.status === 302,
+        'Login realizado': (r) => r.status === 200 || r.status === 302,
     });
 
     console.log(`Login: ${login.status}`);
 
     sleep(1);
-
 
     //=====================================================
     // 2 - QUADRO DE AVISOS
@@ -81,7 +75,6 @@ export default function () {
 
     sleep(1);
 
-
     //=====================================================
     // 3 - CONSULTA PROCESSUAL
     //=====================================================
@@ -97,7 +90,6 @@ export default function () {
     console.log(`Consulta Processo: ${consulta.status}`);
 
     sleep(1);
-
 
     //=====================================================
     // 4 - PESQUISAR PROCESSO
@@ -122,17 +114,14 @@ export default function () {
         'fPP:numeroProcesso:respectivoTribunal': '17',
         'fPP:numeroProcesso:NumeroOrgaoJustica': '',
 
-        'fPP:processoReferenciaDecoration:habilitarMascaraProcessoReferencia':
-            'true',
-
-        'fPP:processoReferenciaDecoration:IdProcessoReferenciaComMascaraDecoration:IdProcessoReferenciaComMascara':
-            '',
+        'fPP:processoReferenciaDecoration:habilitarMascaraProcessoReferencia': 'true',
+        'fPP:processoReferenciaDecoration:IdProcessoReferenciaComMascaraDecoration:IdProcessoReferenciaComMascara': '',
 
         'fPP': 'fPP',
         'autoScroll': '',
         'javax.faces.ViewState': 'j_id3',
         'fPP:j_id480': 'fPP:j_id480',
-        'AJAX:EVENTS_COUNT': '1',
+        'AJAX:EVENTS_COUNT': '1'
     };
 
     const pesquisa = http.post(
@@ -149,7 +138,6 @@ export default function () {
 
     sleep(2);
 
-
     //=====================================================
     // 5 - ABRIR O PROCESSO ENCONTRADO
     //=====================================================
@@ -160,17 +148,16 @@ export default function () {
 
         'idProcessoSelecionado': '7783227',
 
-        'ajaxSingle':
-            'fPP:processosTable:7783227:j_id494',
+        'ajaxSingle': 'fPP:processosTable:7783227:j_id494',
 
         'fPP:processosTable:7783227:j_id494':
             'fPP:processosTable:7783227:j_id494',
 
-        'javax.faces.ViewState': 'j_id3',
+        //'javax.faces.ViewState': 'j_id3',
 
         'AJAX:EVENTS_COUNT': '1',
 
-        'fPP': 'fPP',
+        'fPP': 'fPP'
     };
 
     const abrirProcesso = http.post(
@@ -185,72 +172,32 @@ export default function () {
 
     console.log(`Abrir Processo: ${abrirProcesso.status}`);
 
-    sleep(2);
-
-
     //=====================================================
-// 6 - SOLICITAR DOWNLOAD DO DOCUMENTO
+// 6 - DOWNLOAD DO DOCUMENTO
 //=====================================================
-
-console.log('============================================');
-console.log('SOLICITANDO DOWNLOAD DO DOCUMENTO');
-console.log('============================================');
 
 const inicioDownload = Date.now();
 
-const solicitacaoDownload = http.get(
+const download = http.get(
     `${BASE_URL}/d01-1g/seam/resource/rest/pje-legacy/documento/download/244263016`
+   // `${BASE_URL}/2026081209s/0000123-18.2026.8.17.2530-1786537134199-20395-peticao%20inicial%20%28outras%29.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=docs1g296adec7%2F20260812%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260812T121854Z&X-Amz-Expires=120&X-Amz-SignedHeaders=host&X-Amz-Signature=0bde7fcb4ab2de6a3b4c283fe93704192d3dd21ffd83e0db3d1098d391f54f63`
 );
 
-const tempoSolicitacao = Date.now() - inicioDownload;
+const tempoDownload = Date.now() - inicioDownload;
 
-console.log(`Status: ${solicitacaoDownload.status}`);
-console.log(`Tempo: ${tempoSolicitacao} ms`);
-
-
-//=====================================================
-// 7 - MOSTRAR TODOS OS HEADERS
-//=====================================================
-
-console.log('============================================');
-console.log('HEADERS DA RESPOSTA');
-console.log('============================================');
-
-for (const [nome, valor] of Object.entries(solicitacaoDownload.headers)) {
-
-    console.log(`${nome}: ${valor}`);
-
-}
-
-
-//=====================================================
-// 8 - MOSTRAR INFORMAÇÕES DO BODY
-//=====================================================
-
-console.log('============================================');
-console.log('BODY DA RESPOSTA');
-console.log('============================================');
-
-console.log(`Tamanho: ${solicitacaoDownload.body.length} bytes`);
-
-console.log(
-    solicitacaoDownload.body.substring(0, 2000)
-);
-
-console.log('============================================');
-
-
-//=====================================================
-// 9 - VERIFICAR DOWNLOAD
-//=====================================================
-
-check(solicitacaoDownload, {
-
-    'Solicitação download': (r) =>
-        r.status === 200,
+check(download, {
+    'Download aberto': (r) => r.status === 200,
 
 });
 
+console.log(`Abrir Download: ${download.status}`);
+
+
+sleep(2);
+
+
+
+
+
+
 }
-
-

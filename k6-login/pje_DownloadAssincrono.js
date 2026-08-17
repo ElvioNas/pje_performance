@@ -5,8 +5,8 @@ export const options = {
     scenarios: {
         processo_pje: {
             executor: 'constant-vus',
-            vus: 5,
-            duration: '10s',
+            vus: 500,
+            duration: '60s',
         },
     },
 
@@ -23,6 +23,8 @@ const headersForm = {
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
         'X-Requested-With': 'XMLHttpRequest'
     }
+
+    
 };
 
 export default function () {
@@ -52,12 +54,14 @@ export default function () {
     );
 
     check(login, {
-        'Login realizado': (r) => r.status === 200 || r.status === 302,
+        'Login realizado': (r) =>
+            r.status === 200 || r.status === 302,
     });
 
     console.log(`Login: ${login.status}`);
 
     sleep(1);
+
 
     //=====================================================
     // 2 - QUADRO DE AVISOS
@@ -75,6 +79,7 @@ export default function () {
 
     sleep(1);
 
+
     //=====================================================
     // 3 - CONSULTA PROCESSUAL
     //=====================================================
@@ -90,6 +95,7 @@ export default function () {
     console.log(`Consulta Processo: ${consulta.status}`);
 
     sleep(1);
+
 
     //=====================================================
     // 4 - PESQUISAR PROCESSO
@@ -114,8 +120,11 @@ export default function () {
         'fPP:numeroProcesso:respectivoTribunal': '17',
         'fPP:numeroProcesso:NumeroOrgaoJustica': '',
 
-        'fPP:processoReferenciaDecoration:habilitarMascaraProcessoReferencia': 'true',
-        'fPP:processoReferenciaDecoration:IdProcessoReferenciaComMascaraDecoration:IdProcessoReferenciaComMascara': '',
+        'fPP:processoReferenciaDecoration:habilitarMascaraProcessoReferencia':
+            'true',
+
+        'fPP:processoReferenciaDecoration:IdProcessoReferenciaComMascaraDecoration:IdProcessoReferenciaComMascara':
+            '',
 
         'fPP': 'fPP',
         'autoScroll': '',
@@ -138,6 +147,7 @@ export default function () {
 
     sleep(2);
 
+
     //=====================================================
     // 5 - ABRIR O PROCESSO ENCONTRADO
     //=====================================================
@@ -148,8 +158,8 @@ export default function () {
 
         'idProcessoSelecionado': '7695738',
 
-        'ajaxSingle': 'fPP:processosTable:7695738:j_id494',
-    
+        'ajaxSingle':
+            'fPP:processosTable:7695738:j_id494',
 
         'fPP:processosTable:7695738:j_id494':
             'fPP:processosTable:7695738:j_id494',
@@ -173,29 +183,74 @@ export default function () {
 
     console.log(`Abrir Processo: ${abrirProcesso.status}`);
 
+    sleep(2);
+
+
     //=====================================================
-// 6 - DOWNLOAD DO DOCUMENTO
-//=====================================================
+    // 6 - ABRIR DOCUMENTO
+    //=====================================================
 
-/*const inicioDownload = Date.now();
+    const documento = http.get(
+        `${BASE_URL}/d01-1g/seam/resource/rest/pje-legacy/documento/download/244167563`
+    );
 
-const download = http.get(
-    `${BASE_URL}/d01-1g/seam/resource/rest/pje-legacy/documento/download/244263016`
-   // `${BASE_URL}/2026081209s/0000123-18.2026.8.17.2530-1786537134199-20395-peticao%20inicial%20%28outras%29.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=docs1g296adec7%2F20260812%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260812T121854Z&X-Amz-Expires=120&X-Amz-SignedHeaders=host&X-Amz-Signature=0bde7fcb4ab2de6a3b4c283fe93704192d3dd21ffd83e0db3d1098d391f54f63`
-);
+    check(documento, {
+        'Documento solicitado': (r) => r.status === 200,
+    });
 
-const tempoDownload = Date.now() - inicioDownload;
+    console.log(`Documento: ${documento.status}`);
 
-check(download, {
-    'Download aberto': (r) => r.status === 200,
-
-});
-
-console.log(`Abrir Download: ${download.status}`);
+    sleep(2);
 
 
-sleep(2);
+    //=====================================================
+    // 7 - CLICAR NO BOTÃO DOWNLOAD
+    //=====================================================
 
-*/
+    const payloadAreaDownload = {
 
+        'AJAXREQUEST': 'j_id152',
+
+        'j_id153': 'j_id153',
+
+        'autoScroll': '',
+
+        'javax.faces.ViewState': 'j_id3',
+
+        'j_id153:j_id155':
+            'j_id153:j_id155',
+
+        'ajaxSingle':
+            'j_id153:j_id155',
+
+        'AJAX:EVENTS_COUNT': '1'
+    };
+
+    const areaDownload = http.post(
+        `${BASE_URL}/d01-1g/AreaDeDownload/listView.seam`,
+        payloadAreaDownload,
+        {
+            headers: {
+                'Content-Type':
+                    'application/x-www-form-urlencoded; charset=UTF-8',
+
+                'X-Requested-With':
+                    'XMLHttpRequest',
+
+                'Accept':
+                    '*/*',
+
+                'Referer':
+                    `${BASE_URL}/d01-1g/AreaDeDownload/listView.seam`
+            }
+        }
+    );
+
+    check(areaDownload, {
+        'Área Click Download ': (r) => r.status === 200,
+    });
+
+    console.log(`Área Click Download: ${areaDownload.status}`);
+
+    sleep(2);
 }
