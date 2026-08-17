@@ -5,8 +5,8 @@ export const options = {
     scenarios: {
         processo_pje: {
             executor: 'constant-vus',
-            vus: 500,
-            duration: '40s',
+            vus: 5,
+            duration: '10s',
         },
     },
 
@@ -146,14 +146,15 @@ export default function () {
 
         'AJAXREQUEST': '_viewRoot',
 
-        'idProcessoSelecionado': '7783227',
+        'idProcessoSelecionado': '7695738',
 
-        'ajaxSingle': 'fPP:processosTable:7783227:j_id494',
+        'ajaxSingle': 'fPP:processosTable:7695738:j_id494',
+    
 
-        'fPP:processosTable:7783227:j_id494':
-            'fPP:processosTable:7783227:j_id494',
+        'fPP:processosTable:7695738:j_id494':
+            'fPP:processosTable:7695738:j_id494',
 
-        'javax.faces.ViewState': 'j_id3',
+        'javax.faces.ViewState': 'j_id18',
 
         'AJAX:EVENTS_COUNT': '1',
 
@@ -176,7 +177,7 @@ export default function () {
 // 6 - DOWNLOAD DO DOCUMENTO
 //=====================================================
 
-const inicioDownload = Date.now();
+/*const inicioDownload = Date.now();
 
 const download = http.get(
     `${BASE_URL}/d01-1g/seam/resource/rest/pje-legacy/documento/download/244263016`
@@ -195,9 +196,6 @@ console.log(`Abrir Download: ${download.status}`);
 
 sleep(2);
 
-
-
-
-
+*/
 
 }
