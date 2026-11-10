@@ -1,0 +1,17 @@
+stages:
+  - test
+
+image: marketsquare/robotframework-browser
+
+run-robot-tests:
+  stage: test
+  script:
+    # O comando abaixo executa todos os testes na pasta 'tests'
+    # e salva os relatórios na pasta 'reports'
+    - robot --outputdir reports .
+  artifacts:
+    # Salva os relatórios como artefatos para você baixar depois
+    when: always
+    paths:
+      - reports/
+    expire_in: 1 week
